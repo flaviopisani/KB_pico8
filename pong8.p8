@@ -5,7 +5,7 @@ __lua__
 function _init()
 	ball_size = 5
 	ball_x = 64
-	ball_y = 73.5
+	ball_y = 64
 	ball_vx = 1
 	ball_vy = 0
 
@@ -61,19 +61,12 @@ end
 -- ob = object bl = block
 function detect_block_collision(ob_x, ob_y, ob_width, ob_height,
 		bl_x, bl_y, bl_width, bl_height)
+	local collide_x = detect_collision_line( ob_x, ob_x+ob_width,
+			bl_x, bl_x+bl_width)
+	local collide_y = detect_collision_line( ob_y, ob_y+ob_height,
+			bl_y, bl_y+bl_height)
 
-	local ob_left = ob_x
-	local ob_right = ob_x + ob_width
-	local ob_bottom = ob_y
-	local ob_top = ob_y + ob_height
-
-	local bl_left = bl_x
-	local bl_right = bl_x + bl_width
-	local bl_bottom = bl_y
-	local bl_top = bl_y + bl_height
-
-	return ((ob_left < bl_right) and (ob_right > bl_left) and 
-	 (ob_top > bl_bottom) and (ob_bottom < bl_top))
+	return (collide_y and collide_x) 
 end
 
 function detect_collision_line(left_1, right_1, left_2, right_2)
