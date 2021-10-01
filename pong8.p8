@@ -6,17 +6,17 @@ function _init()
 	ball_size = 5
 	ball_x = 64
 	ball_y = 64
-	ball_vx = 0
-	ball_vy = 1
+	ball_vx = 1
+	ball_vy = 0
 
-	paddle_1_length = 10
+	paddle_1_height = 10
 	paddle_1_width = 1
 	paddle_1_x = 0
 	paddle_1_y = 64
 	paddle_1_vx = 5
 	paddle_1_vy = 5
 
-	paddle_2_length = 10
+	paddle_2_height = 10
 	paddle_2_width = 1
 	paddle_2_x = 127 - paddle_2_width
 	paddle_2_y = 64
@@ -58,6 +58,30 @@ function update_ball(x, y, v_x, v_y)
 	return x + v_x, y + v_y
 end
 
+-- ob = object bl = block
+function detect_block_collision(ob_x, ob_y, ob_width, ob_height,
+		bl_x, bl_y, bl_width, bl_height)
+
+	local ob_left = ob_x
+	local ob_right = ob_x + ob_width
+	local ob_top = ob_y
+	local ob_bottom = ob_y - ob_height
+
+	local bl_left = bl_x
+	local bl_right = bl_x + bl_width
+	local bl_top = bl_y
+	local bl_bottom = bl_y - bl_height
+	-- cls()
+
+	if (ob_left < bl_right) and (ob_right > bl_left) and 
+	 (ob_top > bl_bottom) and (ob_bottom < bl_top) then
+		print("yay")
+	end
+	
+
+	return collide_x and collide_y
+end
+
 function detect_collision_line(left_1, right_1, left_2, right_2)
 	local ret_val = false
 	if (left_1 < right_2) and (right_1 > left_2) then
@@ -86,19 +110,25 @@ end
 
 function _update60()
 	ball_x, ball_y =  update_ball(ball_x, ball_y, ball_vx, ball_vy)
-	if (detect_collision_oriz(ball_x, ball_y+ball_size, ball_size, 0, 127, 128)) then
-		ball_vy = -ball_vy
+	if(detect_block_collision(ball_x, ball_y, ball_size, ball_size, paddle_1_x,
+				paddle_1_y, paddle_1_width, paddle_1_height)) then
+			ball_vx = 0
+			ball_vy = 0
 	end
+
+	-- if (detect_collision_oriz(ball_x, ball_y+ball_size, ball_size, 0, 127, 128)) then
+		-- ball_vy = -ball_vy
+	-- end
 end
 
 function _draw()
-	cls()
+	-- cls()
 	draw_dashed_vline(x_net, y1_net, y2_net, net_length, net_width)
 	draw_ball(ball_x, ball_y, ball_size)
-	draw_paddle(paddle_1_x, paddle_1_y, paddle_1_width, paddle_1_length)
-	draw_paddle(paddle_2_x, paddle_2_y, paddle_2_width, paddle_2_length)
-	print(score_p1, score_p1_x, score_p1_y)
-	print(score_p2, score_p2_x, score_p2_y)
+	draw_paddle(paddle_1_x, paddle_1_y, paddle_1_width, paddle_1_height)
+	draw_paddle(paddle_2_x, paddle_2_y, paddle_2_width, paddle_2_height)
+	-- print(score_p1, score_p1_x, score_p1_y)
+	-- print(score_p2, score_p2_x, score_p2_y)
 end
 
 __gfx__
