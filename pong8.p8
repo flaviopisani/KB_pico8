@@ -6,7 +6,7 @@ function _init()
 	ball_size = 5
 	ball_x = 64
 	ball_y = 64
-	ball_vx = 1
+	ball_vx = 3
 	ball_vy = 0
 
 	paddle_1_height = 10
@@ -55,7 +55,9 @@ function draw_paddle(x, y, width, length)
 end
 
 function update_ball(x, y, v_x, v_y)
-	return x + v_x, y + v_y
+	x = x + v_x
+	y = y + v_y
+	return x, y
 end
 
 -- ob = object bl = block
@@ -96,16 +98,20 @@ function detect_collision_oriz(x_1, y_1, length_1, x_2, y_2, length_2)
 end
 
 function _update60()
-	ball_x, ball_y =  update_ball(ball_x, ball_y, ball_vx, ball_vy)
-	if(detect_block_collision(ball_x, ball_y, ball_size, ball_size, paddle_2_x,
-				paddle_2_y, paddle_2_width, paddle_2_height)) then
-			ball_vx = 0
-			ball_vy = 0
+	ball_x, ball_y = update_ball(ball_x, ball_y, ball_vx, ball_vy)
+	-- update_ball(ball_x, ball_y, ball_vx, ball_vy)
+
+	if(detect_block_collision(ball_x, ball_y, ball_size,
+				ball_size, paddle_1_x, paddle_1_y, paddle_1_width, paddle_1_height))
+	 or (detect_block_collision(ball_x, ball_y, ball_size, ball_size, 
+				paddle_2_x, paddle_2_y, paddle_2_width, paddle_2_height)) then
+			ball_vx = -ball_vx
+			ball_vy = -ball_vy
 	end
 
-	-- if (detect_collision_oriz(ball_x, ball_y+ball_size, ball_size, 0, 127, 128)) then
-		-- ball_vy = -ball_vy
-	-- end
+	if (detect_collision_oriz(ball_x, ball_y+ball_size, ball_size, 0, 127, 128)) then
+		ball_vy = -ball_vy
+	end
 end
 
 function _draw()
